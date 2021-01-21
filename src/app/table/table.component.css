@@ -1,0 +1,29 @@
+.order-badge {
+  color: rgb(0, 0, 0);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.status-delivered {
+  background-color: #689f38;
+}
+
+.status-scheduled {
+  background-color: rgba(255, 167, 5, 0.979);
+}
+
+.status-processing {
+  background-color: #e9db18;
+}
+
+/* .status- {
+  background-color: #d32f2f;
+} */
+
+/* .status- {
+  background-color: #9c27b0;
+} */
+
+.modal-dialog {
+  max-width: 700px !important;
+}
