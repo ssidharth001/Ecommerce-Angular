@@ -16,17 +16,5 @@ export class OrdersService {
             .get(
                 "https://ecommerce-management-28ea9-default-rtdb.firebaseio.com/orders.json"
             )
-            .pipe(
-                take(1),
-                map((responseData) => {
-                    let ordersArray: Orders;
-                    for (const key in responseData) {
-                        if (responseData.hasOwnProperty(key)) {
-                            ordersArray = { ...responseData[key] };
-                        }
-                    }
-                    return ordersArray;
-                })
-            );
     }
 }
