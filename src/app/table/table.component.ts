@@ -1,4 +1,4 @@
-import { Message } from 'primeng/api';
+import { Message, MessageService } from 'primeng/api';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TreeNode } from 'primeng/api';
@@ -10,7 +10,7 @@ import { OrdersService } from '../services/order-details.service';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
   encapsulation: ViewEncapsulation.None,
-  providers: [ConfirmationService]
+  providers: [ConfirmationService, MessageService]
 })
 export class TableComponent implements OnInit {
 
@@ -20,7 +20,7 @@ export class TableComponent implements OnInit {
 
   statuses: any[];
 
-  loading: boolean = false;
+  loading: boolean = true;
 
   activityValues: number[] = [0, 100];
 
@@ -36,34 +36,41 @@ export class TableComponent implements OnInit {
 
   editAddressMode: boolean = false;
 
-  constructor(private modalService: NgbModal, private confirmationService: ConfirmationService, private ordersService: OrdersService) { }
+  selOrderAddress: any;
+
+  editedAddress: string;
+
+  constructor(private modalService: NgbModal, private confirmationService: ConfirmationService, private ordersService: OrdersService, private messageService: MessageService) { }
 
   ngOnInit() {
 
-    this.ordersService.fetchOrders().subscribe((res) => console.log(res))
+    this.ordersService.fetchOrders().subscribe((res) => {
+      this.orders = res;
+      this.loading = false;
+    })
 
-    this.orders = [
-      {
-        "orderId": 1000,
-        "status": "scheduled",
-        "orderDate": "2015-09-13",
-        "trackingId": 'TNO1000',
-        "deliveryDate": "2015-09-23"
-      },
-      {
-        "orderId": 1001,
-        "status": "processing",
-        "orderDate": "2015-08-13",
-        "trackingId": 'TNO1001',
-        "deliveryDate": "2015-08-23"
-      },
-      {
-        "orderId": 1004,
-        "status": "delivered",
-        "orderDate": "2015-09-10",
-        "trackingId": 'TNO1004',
-        "deliveryDate": "2015-09-16"
-      }]
+    // this.orders = [
+    //   {
+    //     "orderId": 1000,
+    //     "status": "scheduled",
+    //     "orderDate": "2015-09-13",
+    //     "trackingId": 'TNO1000',
+    //     "deliveryDate": "2015-09-23"
+    //   },
+    //   {
+    //     "orderId": 1001,
+    //     "status": "processing",
+    //     "orderDate": "2015-08-13",
+    //     "trackingId": 'TNO1001',
+    //     "deliveryDate": "2015-08-23"
+    //   },
+    //   {
+    //     "orderId": 1004,
+    //     "status": "delivered",
+    //     "orderDate": "2015-09-10",
+    //     "trackingId": 'TNO1004',
+    //     "deliveryDate": "2015-09-16"
+    //   }]
 
     this.orderDetails = [
       {
@@ -71,19 +78,39 @@ export class TableComponent implements OnInit {
         "data": "",
         "expandedIcon": "pi pi-sitemap",
         "collapsedIcon": "pi pi-sitemap",
-
-        "children": [{ "label": "Shipment 1", "icon": "pi-ellipsis-h", "data": "" }, { "label": "Shipment 1", "icon": "pi-ellipsis-h", "data": "" }]
-
+        "children": [{
+          "label": "Shipment 1",
+          "data": "",
+          "expandedIcon": "pi pi-sitemap",
+          "collapsedIcon": "pi pi-sitemap",
+          "children": [{ "label": "Cancel", "icon": "pi pi-minus-circle", "data": "" }]
+        },
+        {
+          "label": "Shipment 2",
+          "data": "",
+          "expandedIcon": "pi pi-sitemap",
+          "collapsedIcon": "pi pi-sitemap",
+          "children": [{ "label": "Cancel", "icon": "pi pi-minus-circle", "data": "" }]
+        }]
       }
     ]
 
-    this.orders.forEach(
-      order => (order.date = new Date(order.date))
+    this.orders?.forEach(
+      order => order
     );
   }
 
-  openEditOrder(content, orderId) {
+  nodeSelect(event) {
+    if (event.node.label == 'Cancel') {
+      console.log('Shipment Cancelled')
+    }
+
+  }
+
+  openEditOrder(orderId) {
     this.editAddressMode = false;
+    this.selOrderAddress = this.orders.filter((order) => { return order.orderId == orderId })[0].shippingAddress;
+    this.editedAddress = this.selOrderAddress;
     this.selectedOrderId = orderId;
     this.displayModal = true;
   }
@@ -108,6 +135,11 @@ export class TableComponent implements OnInit {
   onEditAddress() {
     this.editAddressMode = true;
     console.log('done');
+  }
+
+  onSubmitAddress() {
+    console.log(this.editedAddress);
+
   }
 
   onCancelEdit() {

@@ -54,7 +54,7 @@
           type="button"
           icon="pi pi-pencil"
           class="p-button-rounded p-button-text"
-          (click)="openEditOrder(content, order.orderId)"
+          (click)="openEditOrder(order.orderId)"
         ></button>
         <button
           pButton
@@ -118,14 +118,16 @@
     <div class="row">
       <div class="col-10" *ngIf="!editAddressMode">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation
+          {{ selOrderAddress }}
         </p>
       </div>
       <div class="col-10" *ngIf="editAddressMode">
-        <textarea class="form-control" rows="4" style="overflow: hidden">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+        <textarea
+          class="form-control"
+          rows="4"
+          style="overflow: hidden"
+          [(ngModel)]="editedAddress"
+        >
         </textarea>
       </div>
       <div class="col-2">
@@ -157,7 +159,11 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
       </div>
     </div>
 
-    <p-tree [value]="orderDetails"></p-tree>
+    <p-tree
+      [value]="orderDetails"
+      selectionMode="single"
+      (onNodeSelect)="nodeSelect($event)"
+    ></p-tree>
   </div>
   <ng-template pTemplate="footer">
     <p-button
@@ -168,3 +174,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
     ></p-button>
   </ng-template>
 </p-dialog>
+<p-toast></p-toast>
