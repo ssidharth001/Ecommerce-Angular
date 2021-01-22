@@ -22,6 +22,12 @@ import { NgbPaginationModule, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap'
 
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
+
+import { MessagesModule } from 'primeng/messages';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InplaceModule } from 'primeng/inplace';
+import { HttpClientModule } from '@angular/common/http';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,7 +53,11 @@ import { TreeNode } from 'primeng/api';
     NgbPaginationModule,
     NgbAlertModule,
     TreeModule,
-    DialogModule
+    DialogModule,
+    MessagesModule,
+    ConfirmDialogModule,
+    InplaceModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

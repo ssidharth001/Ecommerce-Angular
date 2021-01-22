@@ -1,5 +1,6 @@
 .order-badge {
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-weight: 500;
   padding: 5px;
   border-radius: 5px;
 }
@@ -26,4 +27,9 @@
 
 .modal-dialog {
   max-width: 700px !important;
+}
+
+.btn {
+  margin: 2px;
+  padding: 3px 6px !important;
 }

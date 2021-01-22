@@ -1,12 +1,16 @@
+import { Message } from 'primeng/api';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TreeNode } from 'primeng/api';
-
+import { ConfirmationService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
+import { OrdersService } from '../services/order-details.service';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  providers: [ConfirmationService]
 })
 export class TableComponent implements OnInit {
 
@@ -28,9 +32,15 @@ export class TableComponent implements OnInit {
 
   displayModal: boolean;
 
-  constructor(private modalService: NgbModal) { }
+  msgs: Message[] = [];
+
+  editAddressMode: boolean = false;
+
+  constructor(private modalService: NgbModal, private confirmationService: ConfirmationService, private ordersService: OrdersService) { }
 
   ngOnInit() {
+
+    this.ordersService.fetchOrders().subscribe((res) => console.log(res))
 
     this.orders = [
       {
@@ -72,15 +82,35 @@ export class TableComponent implements OnInit {
     );
   }
 
-  showModalDialog(content, orderId) {
+  openEditOrder(content, orderId) {
+    this.editAddressMode = false;
     this.selectedOrderId = orderId;
     this.displayModal = true;
   }
 
-  onclick(content, orderId) {
-    console.log(orderId);
+  confirmDelete(orderId) {
+    this.confirmationService.confirm({
+      message: 'Do you want to delete this order?',
+      header: 'Delete Confirmation',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        this.msgs = [{ severity: 'info', summary: 'Confirmed', detail: 'Record deleted' }];
+        console.log('deleted');
 
+      },
+      reject: () => {
+        this.msgs = [{ severity: 'info', summary: 'Rejected', detail: 'You have rejected' }];
+        console.log('not deleted');
+      }
+    });
+  }
 
-    this.modalService.open(content)
+  onEditAddress() {
+    this.editAddressMode = true;
+    console.log('done');
+  }
+
+  onCancelEdit() {
+    this.editAddressMode = false;
   }
 }
